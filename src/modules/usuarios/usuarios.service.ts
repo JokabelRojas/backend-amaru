@@ -33,6 +33,9 @@ export class UsuariosService {
   async findByEmail(email: string): Promise<UsuarioDocument | null> {
     return this.usuarioModel.findOne({ email }).populate('id_rol').exec();
   }
+  async findByDni(dni: string): Promise<any> {
+  return this.usuarioModel.findOne({ dni }).populate('id_rol').exec();
+}
 
   async update(id: string, updateUsuarioDto: any): Promise<UsuarioDocument> {
     if (!Types.ObjectId.isValid(id)) {

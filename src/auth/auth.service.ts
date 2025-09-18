@@ -2,29 +2,30 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsuariosService } from '../modules/usuarios/usuarios.service';
 import { UsuarioDocument } from '../entities/usuario.entity';
+import { Rol } from 'src/entities/rol.entity';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model, Types } from 'mongoose';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usuariosService: UsuariosService,
     private jwtService: JwtService,
+    @InjectModel(Rol.name) private rolModel: Model<Rol>,
   ) {}
 
   async validateUser(email: string, password: string): Promise<any> {
     const user = await this.usuariosService.findByEmail(email);
     
-    // Verificar explícitamente que user no sea null
     if (!user) {
       return null;
     }
     
-    // Verificar la contraseña usando el método del documento
     const isPasswordValid = await user.comparePassword(password);
     if (!isPasswordValid) {
       return null;
     }
     
-    // Eliminar la contraseña del objeto de retorno
     const { contrasena, ...result } = user.toObject();
     return result;
   }
@@ -49,13 +50,27 @@ export class AuthService {
   }
 
   async register(createUserDto: any) {
-    // Verificar si el usuario ya existe
     const existingUser = await this.usuariosService.findByEmail(createUserDto.email);
     if (existingUser) {
       throw new UnauthorizedException('El usuario ya existe');
     }
+    const existingUserByDni = await this.usuariosService.findByDni(createUserDto.dni);
+    if (existingUserByDni) {
+      throw new UnauthorizedException('El DNI ya está registrado');
+    }
     
-    const user = await this.usuariosService.create(createUserDto);
+    const adminRole = await this.rolModel.findOne({ nombre: 'admin' });
+    if (!adminRole) {
+      throw new UnauthorizedException('Rol admin no encontrado');
+    }
+    
+    const userData = {
+      ...createUserDto,
+      contrasena: createUserDto.password,
+      id_rol: adminRole._id 
+    };
+    
+    const user = await this.usuariosService.create(userData);
     const { contrasena, ...result } = user.toObject();
     return result;
   }

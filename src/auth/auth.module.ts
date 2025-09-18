@@ -7,10 +7,13 @@ import { AuthController } from './auth.controller';
 import { JwtStrategy } from './jwt.strategy';
 import { Usuario, UsuarioSchema } from '../entities/usuario.entity';
 import { UsuariosService } from '../modules/usuarios/usuarios.service';
+import { Rol, RolSchema } from 'src/entities/rol.entity';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: Usuario.name, schema: UsuarioSchema }]),
+    MongooseModule.forFeature([{ name: Usuario.name, schema: UsuarioSchema },
+                               { name: Rol.name, schema: RolSchema}
+    ]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
