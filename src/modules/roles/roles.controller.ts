@@ -7,12 +7,12 @@ import { CreateRolDto } from './dto/create-roles.dto';
 import { UpdateRolDto } from './dto/update-roles.dto';
 
 @Controller('roles')
-// @UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard)
 export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
 
   @Post()
-  // @Roles('admin')
+  @Roles('admin')
   create(@Body() createRolDto: CreateRolDto): Promise<Rol> {
     return this.rolesService.create(createRolDto);
   }
