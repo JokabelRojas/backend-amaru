@@ -14,19 +14,19 @@ export class RegisterDto {
   dni: string;
 
   @IsEmail()
-  email: string;
+  email: string; // tiene que tener @ y tiene que terminar en .com 
 
   @IsString()
   @MinLength(6)
-  password: string;
+  password: string; // que tenga minimo 6 caracteres
 
   @IsString()
-  telefono?: string;
+  telefono?: string; 
 
   @IsString()
   direccion?: string;
 
   @IsString()
   @IsOptional() 
-  id_rol?: string;
+  id_rol?: string; // el id_rol es opcional, por que al final lo estamos enviando por defecto en el servicio.
 }

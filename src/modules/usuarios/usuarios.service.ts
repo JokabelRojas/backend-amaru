@@ -44,7 +44,7 @@ export class UsuariosService {
 
     const usuario = await this.usuarioModel
       .findByIdAndUpdate(id, updateUsuarioDto, { new: true })
-      .populate('id_rol')
+      .populate('id_rol') //populate signifa en mongodb que en vez de traerte solo el id de rol, te va a traer todo el documento de la base de datos
       .exec();
     
     if (!usuario) {
@@ -66,6 +66,6 @@ export class UsuariosService {
   }
 
   async count(): Promise<number> {
-    return this.usuarioModel.countDocuments().exec();
+    return this.usuarioModel.countDocuments().exec(); 
   }
 }

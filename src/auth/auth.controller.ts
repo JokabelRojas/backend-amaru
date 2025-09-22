@@ -7,10 +7,10 @@ import { RegisterDto } from './dto/register.dto';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('login')
+  @Post('login') // ruta login localhost:3000/auth/login
   @HttpCode(HttpStatus.OK)
   async login(@Body() loginDto: LoginDto) {
-    const user = await this.authService.validateUser(loginDto.email, loginDto.password);
+    const user = await this.authService.validateUser(loginDto.email, loginDto.password); // valida que exista el email y la contraseña para consumir esta api
     if (!user) {
       throw new UnauthorizedException('Credenciales inválidas');
     }
@@ -19,6 +19,6 @@ export class AuthController {
 
   @Post('register')
   async register(@Body() registerDto: RegisterDto) {
-    return this.authService.register(registerDto);
+    return this.authService.register(registerDto); // nos dice que tenemos que enviar los datos como el tegisterDto
   }
 }

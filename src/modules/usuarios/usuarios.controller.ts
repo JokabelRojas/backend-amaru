@@ -5,18 +5,18 @@ import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { Roles } from '../../auth/decorators/roles.decorator';
 
 @Controller('usuarios')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard) //guard para proteger las rutas
 export class UsuariosController {
   constructor(private readonly usuariosService: UsuariosService) {}
 
   @Post()
-  @Roles('admin')
+  @Roles('admin') // solo el admin puede crear usuarios
   create(@Body() createUsuarioDto: any): Promise<Usuario> {
     return this.usuariosService.create(createUsuarioDto);
   }
 
   @Get()
-  @Roles('admin')
+  @Roles('admin') //solo el admin puede ver todos los usuarios
   findAll(): Promise<Usuario[]> {
     return this.usuariosService.findAll();
   }
