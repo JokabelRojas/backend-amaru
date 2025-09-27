@@ -7,6 +7,7 @@ import databaseConfig from './config/database.config';
 import { AuthModule } from './auth/auth.module';
 import { UsuariosModule } from './modules/usuarios/usuarios.module';
 import { RolesModule } from './modules/roles/roles.module';
+import { CategoriaModule } from './modules/categorias/categorias.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -26,6 +27,7 @@ import { RolesModule } from './modules/roles/roles.module';
     AuthModule,
     UsuariosModule,
     RolesModule,
+    CategoriaModule
   ],
 })
 export class AppModule {}
