@@ -8,6 +8,11 @@ import { AuthModule } from './auth/auth.module';
 import { UsuariosModule } from './modules/usuarios/usuarios.module';
 import { RolesModule } from './modules/roles/roles.module';
 import { CategoriaModule } from './modules/categorias/categorias.module';
+import { SubcategoriasModule } from './modules/subcategorias/subcategorias.module';
+import { TalleresModule } from './modules/talleres/talleres.module';
+import { BloquesModule } from './modules/bloques/bloques.module';
+import { ServiciosModule } from './modules/servicios/servicios.module';
+import { FestivalesModule } from './modules/festivales/festivales.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -27,7 +32,12 @@ import { CategoriaModule } from './modules/categorias/categorias.module';
     AuthModule,
     UsuariosModule,
     RolesModule,
-    CategoriaModule
+    CategoriaModule,
+    SubcategoriasModule,
+    TalleresModule,
+    BloquesModule,
+    ServiciosModule,
+    FestivalesModule
   ],
 })
 export class AppModule {}
