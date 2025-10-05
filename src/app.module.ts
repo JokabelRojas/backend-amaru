@@ -13,6 +13,9 @@ import { TalleresModule } from './modules/talleres/talleres.module';
 import { BloquesModule } from './modules/bloques/bloques.module';
 import { ServiciosModule } from './modules/servicios/servicios.module';
 import { FestivalesModule } from './modules/festivales/festivales.module';
+import { InscripcionesModule } from './modules/inscripciones/inscripciones.module';
+import { DetalleInscripcionesModule } from './modules/detalle-inscripcion/detalle-inscripciones.module';
+import { PagosModule } from './modules/pagos/pagos.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -37,7 +40,10 @@ import { FestivalesModule } from './modules/festivales/festivales.module';
     TalleresModule,
     BloquesModule,
     ServiciosModule,
-    FestivalesModule
+    FestivalesModule,
+    InscripcionesModule,
+    DetalleInscripcionesModule,
+    PagosModule
   ],
 })
 export class AppModule {}
