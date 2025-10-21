@@ -1,10 +1,22 @@
-import { Controller, Post, Body, HttpCode, HttpStatus, UnauthorizedException } from '@nestjs/common';
+import { 
+  Controller, 
+  Post, 
+  Body, 
+  HttpCode, 
+  HttpStatus, 
+  UnauthorizedException 
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
-import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
+import { 
+  ApiTags, 
+  ApiOperation, 
+  ApiResponse, 
+  ApiBody 
+} from '@nestjs/swagger';
 
-@ApiTags('auth') // Agrupa los endpoints bajo "auth" en Swagger UI
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -34,8 +46,32 @@ export class AuthController {
 
   @Post('register')
   @ApiOperation({ 
-    summary: 'Registrar nuevo usuario', 
-    description: 'Crea una nueva cuenta de usuario' 
+    summary: 'Registrar nuevo administrador', 
+    description: 'Crea una nueva cuenta de administrador' 
+  })
+  @ApiBody({ type: RegisterDto })
+  @ApiResponse({ 
+    status: 201, 
+    description: 'Administrador registrado exitosamente' 
+  })
+  @ApiResponse({ 
+    status: 400, 
+    description: 'Datos de registro inválidos' 
+  })
+  @ApiResponse({ 
+    status: 409, 
+    description: 'El usuario ya existe (email o DNI duplicado)' 
+  })
+  async register(@Body() registerDto: RegisterDto) {
+    return this.authService.register(registerDto);
+  }
+
+  // NUEVO ENDPOINT PARA REGISTRAR USUARIOS NORMALES
+  @Post('register-user')
+  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({ 
+    summary: 'Registrar nuevo usuario normal', 
+    description: 'Crea una nueva cuenta de usuario con rol "user"' 
   })
   @ApiBody({ type: RegisterDto })
   @ApiResponse({ 
@@ -50,7 +86,7 @@ export class AuthController {
     status: 409, 
     description: 'El usuario ya existe (email o DNI duplicado)' 
   })
-  async register(@Body() registerDto: RegisterDto) {
-    return this.authService.register(registerDto);
+  async registerUser(@Body() registerDto: RegisterDto) {
+    return this.authService.registerUser(registerDto);
   }
 }

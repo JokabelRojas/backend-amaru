@@ -41,10 +41,10 @@ export class UsuariosService {
     if (!Types.ObjectId.isValid(id)) {
       throw new NotFoundException('ID de usuario no válido');
     }
-
+ 
     const usuario = await this.usuarioModel
       .findByIdAndUpdate(id, updateUsuarioDto, { new: true })
-      .populate('id_rol') //populate signifa en mongodb que en vez de traerte solo el id de rol, te va a traer todo el documento de la base de datos
+      .populate('id_rol')
       .exec();
     
     if (!usuario) {
