@@ -90,6 +90,15 @@ export class CreateTallerDto {
   @IsNotEmpty({ message: 'El cupo total es requerido' })
   cupo_total: number;
 
+    @ApiProperty({
+    description: 'ID de la categoría a la que pertenece el taller',
+    example: '507f1f77bcf86cd799439010',
+    required: true
+  })
+  @IsMongoId({ message: 'El ID de categoría debe ser un ObjectId válido' })
+  @IsNotEmpty({ message: 'El ID de categoría es requerido' })
+  id_categoria: string;
+
   @ApiProperty({
     description: 'ID de la subcategoría a la que pertenece el taller',
     example: '507f1f77bcf86cd799439011',
@@ -118,4 +127,5 @@ export class CreateTallerDto {
   @IsUrl()
   @IsOptional()
   imagen_url?: string;
+
 }

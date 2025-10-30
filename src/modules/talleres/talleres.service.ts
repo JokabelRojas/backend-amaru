@@ -20,15 +20,15 @@ export class TalleresService {
 
 async create(createTallerDto: CreateTallerDto): Promise<Taller> {
   try {
-    // Validar que la subcategoría existe
+    // Validar que la categoría y subcategoría existen (IDs válidos)
+    this.validateMongoId(createTallerDto.id_categoria);
     this.validateMongoId(createTallerDto.id_subcategoria);
-    
+
     // Validar fechas
     if (new Date(createTallerDto.fecha_fin) <= new Date(createTallerDto.fecha_inicio)) {
       throw new BadRequestException('La fecha de fin debe ser posterior a la fecha de inicio');
     }
 
-    // Calcular cupo_disponible igual al cupo_total al crear
     const tallerData = {
       ...createTallerDto,
       cupo_disponible: createTallerDto.cupo_total
@@ -36,23 +36,25 @@ async create(createTallerDto: CreateTallerDto): Promise<Taller> {
 
     const createdTaller = new this.tallerModel(tallerData);
     const savedTaller = await createdTaller.save();
-    
-    // Hacer populate explícito para asegurar que funcione
+
+    // Populate de ambas referencias
     const taller = await this.tallerModel
       .findById(savedTaller._id)
+      .populate('id_categoria')
       .populate('id_subcategoria')
       .exec();
+
     if (!taller) {
       throw new NotFoundException(`Taller con ID ${savedTaller._id} no encontrado`);
     }
+
     return taller;
-      
   } catch (error) {
     if (error.name === 'ValidationError') {
       throw new BadRequestException('Datos del taller inválidos');
     }
     if (error.name === 'CastError') {
-      throw new BadRequestException('ID de subcategoría inválido');
+      throw new BadRequestException('ID de categoría o subcategoría inválido');
     }
     throw error;
   }
@@ -177,7 +179,7 @@ async update(id: string, updateTallerDto: UpdateTallerDto): Promise<Taller> {
     return this.tallerModel
       .find({ 
         estado: 'activo',
-        fecha_inicio: { $gte: new Date() } // Talleres con fecha futura
+        fecha_inicio: { $gte: new Date() } 
       })
       .populate('id_subcategoria')
       .exec();

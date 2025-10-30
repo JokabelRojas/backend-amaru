@@ -74,7 +74,6 @@ export class AuthService {
     return result;
   }
 
-  // NUEVO MÉTODO PARA REGISTRAR USUARIOS TIPO "user"
   async registerUser(createUserDto: any) {
     const existingUser = await this.usuariosService.findByEmail(createUserDto.email);
     if (existingUser) {
@@ -94,7 +93,7 @@ export class AuthService {
     const userData = {
       ...createUserDto,
       contrasena: createUserDto.password,
-      id_rol: userRole._id // Asigna rol "user"
+      id_rol: userRole._id 
     };
     
     const user = await this.usuariosService.create(userData);

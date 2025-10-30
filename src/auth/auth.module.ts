@@ -11,8 +11,14 @@ import { Rol, RolSchema } from 'src/entities/rol.entity';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: Usuario.name, schema: UsuarioSchema },
-                               { name: Rol.name, schema: RolSchema}
+    MongooseModule.forFeature([{ 
+      name: Usuario.name, 
+      schema: UsuarioSchema 
+    },
+    { 
+      name: Rol.name, 
+      schema: RolSchema
+    }
     ]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
