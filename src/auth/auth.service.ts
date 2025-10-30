@@ -93,13 +93,8 @@ export class AuthService {
     const userData = {
       ...createUserDto,
       contrasena: createUserDto.password,
-<<<<<<< HEAD
-      id_rol: userRole._id 
-    };
-=======
       id_rol: userRole._id // Asigna rol "user"
     }; // Preparar los datos del nuevo usuario con rol de usuario normal
->>>>>>> 281079f07b9c9146bea0a18ce0d7e7df49201be4
     
     const user = await this.usuariosService.create(userData); // Crear el nuevo usuario
     const { contrasena, ...result } = user.toObject();    // Excluir la contraseña de la respuesta
