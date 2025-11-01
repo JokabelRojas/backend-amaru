@@ -1,9 +1,10 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, isValidObjectId } from 'mongoose';
+import { Model, Types, isValidObjectId } from 'mongoose';
 import { CreateTallerDto } from './dto/create-talleres.dto';
 import { UpdateTallerDto } from './dto/update-talleres.dto';
 import { Taller } from 'src/entities/taller.entity';
+
 
 @Injectable()
 export class TalleresService {
@@ -201,4 +202,61 @@ async update(id: string, updateTallerDto: UpdateTallerDto): Promise<Taller> {
       .populate('id_subcategoria')
       .exec();
   }
+
+async filtrarTalleres(filtros: {
+  id_categoria?: string;
+  id_subcategoria?: string;
+  estado?: string;
+  fecha_inicio?: string;
+  fecha_fin?: string;
+}): Promise<Taller[]> {
+  const query: any = {};
+
+  // 🔹 Validar y filtrar id_categoria
+  if (filtros.id_categoria && isValidObjectId(filtros.id_categoria)) {
+    query.id_categoria = new Types.ObjectId(filtros.id_categoria);
+  }
+
+  // 🔹 Validar y filtrar id_subcategoria
+  if (filtros.id_subcategoria && isValidObjectId(filtros.id_subcategoria)) {
+    query.id_subcategoria = new Types.ObjectId(filtros.id_subcategoria);
+  }
+
+  // 🔹 Filtro: estado
+  if (filtros.estado && ['activo', 'inactivo'].includes(filtros.estado.toLowerCase())) {
+    query.estado = filtros.estado.toLowerCase();
+  }
+
+  // 🔹 Filtro: rango de fechas
+  if (filtros.fecha_inicio || filtros.fecha_fin) {
+    query.fecha_inicio = {};
+    
+    if (filtros.fecha_inicio) {
+      const fechaInicio = new Date(filtros.fecha_inicio);
+      if (!isNaN(fechaInicio.getTime())) {
+        query.fecha_inicio.$gte = fechaInicio;
+      }
+    }
+    
+    if (filtros.fecha_fin) {
+      const fechaFin = new Date(filtros.fecha_fin);
+      if (!isNaN(fechaFin.getTime())) {
+        query.fecha_inicio.$lte = fechaFin;
+      }
+    }
+
+    // Si el objeto quedó vacío, lo eliminamos
+    if (Object.keys(query.fecha_inicio).length === 0) {
+      delete query.fecha_inicio;
+    }
+  }
+
+  console.log('Query ejecutado:', JSON.stringify(query, null, 2));
+
+  return this.tallerModel
+    .find(query)
+    .populate('id_categoria')
+    .populate('id_subcategoria')
+    .exec();
+}
 }

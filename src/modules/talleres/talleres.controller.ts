@@ -21,7 +21,8 @@ import {
   ApiBody,
   ApiParam,
   ApiBadRequestResponse,
-  ApiNotFoundResponse
+  ApiNotFoundResponse,
+  ApiQuery
 } from '@nestjs/swagger';
 
 @ApiTags('talleres')
@@ -59,6 +60,33 @@ export class TalleresController {
   })
   async findAll(): Promise<Taller[]> {
     return this.talleresService.findAll();
+  }
+
+
+  @Get('filtrar/talleres')
+  @ApiOperation({
+    summary: 'Filtrar talleres',
+    description: 'Permite filtrar talleres por categoría, subcategoría, estado y rango de fechas (todos opcionales)',
+  })
+  @ApiQuery({ name: 'id_categoria', required: false })
+  @ApiQuery({ name: 'id_subcategoria', required: false })
+  @ApiQuery({ name: 'estado', required: false })
+  @ApiQuery({ name: 'fecha_inicio', required: false })
+  @ApiQuery({ name: 'fecha_fin', required: false })
+  async filtrarTalleres(
+    @Query('id_categoria') idCategoria?: string,
+    @Query('id_subcategoria') idSubcategoria?: string,
+    @Query('estado') estado?: string,
+    @Query('fecha_inicio') fechaInicio?: string,
+    @Query('fecha_fin') fechaFin?: string,
+  ) {
+    return this.talleresService.filtrarTalleres({
+      id_categoria: idCategoria,
+      id_subcategoria: idSubcategoria,
+      estado,
+      fecha_inicio: fechaInicio,
+      fecha_fin: fechaFin,
+    });
   }
 
   @Get('activos')
@@ -111,6 +139,7 @@ export class TalleresController {
     return this.talleresService.findBySubcategoria(idSubcategoria);
   }
 
+  // 👇 SOLO UN @Get(':id') - ELIMINA EL DUPLICADO
   @Get(':id')
   @ApiOperation({
     summary: 'Obtener un taller por ID',

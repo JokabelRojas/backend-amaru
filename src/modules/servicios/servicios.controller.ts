@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, Query } from '@nestjs/common';
 import { ServiciosService } from './servicios.service';
 import { CreateServicioDto } from './dto/create-servicios.dto';
 import { UpdateServicioDto } from './dto/update-servicios.dto';
@@ -10,7 +10,8 @@ import {
   ApiBody,
   ApiParam,
   ApiBadRequestResponse,
-  ApiNotFoundResponse
+  ApiNotFoundResponse,
+  ApiQuery
 } from '@nestjs/swagger';
 
 @ApiTags('servicios')
@@ -21,7 +22,7 @@ export class ServiciosController {
   @Post()
   @ApiOperation({
     summary: 'Crear un nuevo servicio',
-    description: 'Crea un nuevo servicio asociado a una subcategoría existente'
+    description: 'Crea un nuevo servicio asociado a una categoría y subcategoría existente'
   })
   @ApiBody({ type: CreateServicioDto })
   @ApiResponse({
@@ -30,7 +31,7 @@ export class ServiciosController {
     type: Servicio
   })
   @ApiBadRequestResponse({
-    description: 'Datos inválidos o ID de subcategoría no existe'
+    description: 'Datos inválidos o IDs de categoría/subcategoría no existen'
   })
   create(@Body() createServicioDto: CreateServicioDto): Promise<Servicio> {
     return this.serviciosService.create(createServicioDto);
@@ -48,6 +49,72 @@ export class ServiciosController {
   })
   findAll(): Promise<Servicio[]> {
     return this.serviciosService.findAll();
+  }
+
+  @Get('filtrar/servicios')
+  @ApiOperation({
+    summary: 'Filtrar servicios',
+    description: 'Permite filtrar servicios por categoría, subcategoría y estado (todos opcionales)'
+  })
+  @ApiQuery({ 
+    name: 'id_categoria', 
+    required: false,
+    description: 'ID de la categoría para filtrar',
+    example: '507f1f77bcf86cd799439010'
+  })
+  @ApiQuery({ 
+    name: 'id_subcategoria', 
+    required: false,
+    description: 'ID de la subcategoría para filtrar',
+    example: '507f1f77bcf86cd799439011'
+  })
+  @ApiQuery({ 
+    name: 'estado', 
+    required: false,
+    description: 'Estado del servicio (activo/inactivo)',
+    enum: ['activo', 'inactivo'],
+    example: 'activo'
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Servicios filtrados obtenidos exitosamente',
+    type: [Servicio]
+  })
+  @ApiBadRequestResponse({
+    description: 'Parámetros de filtrado inválidos'
+  })
+  async filtrarServicios(
+    @Query('id_categoria') idCategoria?: string,
+    @Query('id_subcategoria') idSubcategoria?: string,
+    @Query('estado') estado?: string,
+  ): Promise<Servicio[]> {
+    return this.serviciosService.filtrarServicios({
+      id_categoria: idCategoria,
+      id_subcategoria: idSubcategoria,
+      estado,
+    });
+  }
+
+  @Get('categoria/:idCategoria')
+  @ApiOperation({
+    summary: 'Obtener servicios por categoría',
+    description: 'Retorna todos los servicios asociados a una categoría específica'
+  })
+  @ApiParam({
+    name: 'idCategoria',
+    description: 'ID de la categoría (MongoDB ObjectId)',
+    example: '507f1f77bcf86cd799439010'
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Servicios de la categoría especificada',
+    type: [Servicio]
+  })
+  @ApiNotFoundResponse({
+    description: 'Categoría no encontrada'
+  })
+  findByCategoria(@Param('idCategoria') idCategoria: string): Promise<Servicio[]> {
+    return this.serviciosService.findByCategoria(idCategoria);
   }
 
   @Get('subcategoria/:idSubcategoria')

@@ -20,6 +20,15 @@ export class CreateServicioDto {
   descripcion?: string;
 
   @ApiProperty({
+    description: 'ID de la categoría a la que pertenece el servicio',
+    example: '507f1f77bcf86cd799439010',
+    required: true
+  })
+  @IsMongoId()
+  @IsNotEmpty()
+  id_categoria: string;
+
+  @ApiProperty({
     description: 'ID de la subcategoría a la que pertenece el servicio',
     example: '507f1f77bcf86cd799439011',
     required: true
