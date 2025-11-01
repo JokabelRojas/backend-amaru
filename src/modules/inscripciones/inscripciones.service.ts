@@ -65,7 +65,7 @@ export class InscripcionesService {
 
   async cambiarEstado(id: string, estado: string): Promise<Inscripcion> {
     this.validateMongoId(id);
-    const estadosPermitidos = ['pendiente', 'pagado', 'cancelado', 'completado'];
+    const estadosPermitidos = ['pendiente','aprobado','rechazado'];
     if (!estadosPermitidos.includes(estado)) {
       throw new BadRequestException(`Estado debe ser: ${estadosPermitidos.join(', ')}`);
     }
@@ -79,7 +79,7 @@ export class InscripcionesService {
   }
 
   async findByEstado(estado: string): Promise<Inscripcion[]> {
-    const estadosPermitidos = ['pendiente', 'pagado', 'cancelado', 'completado'];
+    const estadosPermitidos = ['pendiente','aprobado','rechazado'];
     if (!estadosPermitidos.includes(estado)) {
       throw new BadRequestException(`Estado debe ser: ${estadosPermitidos.join(', ')}`);
     }

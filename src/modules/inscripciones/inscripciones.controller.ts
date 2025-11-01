@@ -108,7 +108,7 @@ export class InscripcionesController {
     name: 'estado',
     description: 'Estado de las inscripciones a filtrar',
     example: 'pendiente',
-    enum: ['pendiente', 'pagado', 'cancelado', 'completado']
+    enum: ['pendiente','aprobado','rechazado']
   })
   @ApiResponse({
     status: 200,
@@ -173,7 +173,7 @@ export class InscripcionesController {
   @Patch(':id/estado')
   @ApiOperation({
     summary: 'Cambiar estado de una inscripción',
-    description: 'Actualiza el estado de una inscripción específica (pendiente, pagado, cancelado, completado)'
+    description: 'Actualiza el estado de una inscripción específica (pendiente,aprobado,rechazado)'
   })
   @ApiParam({
     name: 'id',
@@ -186,7 +186,7 @@ export class InscripcionesController {
       properties: {
         estado: {
           type: 'string',
-          enum: ['pendiente', 'pagado', 'cancelado', 'completado'],
+          enum: ['pendiente','aprobado','rechazado'],
           example: 'pagado',
           description: 'Nuevo estado de la inscripción'
         }
@@ -203,7 +203,7 @@ export class InscripcionesController {
     description: 'Inscripción no encontrada'
   })
   @ApiBadRequestResponse({
-    description: 'Estado inválido. Debe ser: pendiente, pagado, cancelado o completado'
+    description: 'Estado inválido. Debe ser: pendiente,aprobado,rechazado'
   })
   cambiarEstado(@Param('id') id: string, @Body('estado') estado: string): Promise<Inscripcion> {
     return this.inscripcionesService.cambiarEstado(id, estado);

@@ -49,12 +49,12 @@ export class Inscripcion extends Document {
   @ApiProperty({
     description: 'Estado de la inscripción',
     example: 'pendiente',
-    enum: ['pendiente', 'pagado', 'cancelado', 'completado'],
+    enum: ['pendiente','aprobado','rechazado'],
     default: 'pendiente'
   })
   @Prop({ 
     default: 'pendiente', 
-    enum: ['pendiente', 'pagado', 'cancelado', 'completado'] 
+    enum: ['pendiente','aprobado','rechazado'] 
   })
   estado: string;
 

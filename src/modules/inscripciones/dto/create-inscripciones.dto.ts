@@ -36,11 +36,11 @@ export class CreateInscripcionDto {
   @ApiPropertyOptional({
     description: 'Estado de la inscripción',
     example: 'pendiente',
-    enum: ['pendiente', 'pagado', 'cancelado', 'completado'],
+    enum: ['pendiente','aprobado','rechazado'],
     default: 'pendiente'
   })
   @IsString()
-  @IsIn(['pendiente', 'pagado', 'cancelado', 'completado'])
+  @IsIn(['pendiente','aprobado','rechazado'])
   @IsOptional()
   estado?: string;
 }
